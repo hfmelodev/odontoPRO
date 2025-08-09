@@ -2,6 +2,11 @@
   "name": "odontopro",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Hilquias Ferreira Melo",
+    "email": "hilquiasfmelo@gmail.com",
+    "url": "https://github.com/hfmelodev"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
