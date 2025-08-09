@@ -14,7 +14,7 @@ export function Header() {
     <header className="fixed top-0 right-0 left-0 z-50 border-b bg-muted/40 px-6 py-4 shadow-muted shadow-sm backdrop-blur-md">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="font-bold text-2xl">
-          Odonto <span className="font-extrabold text-primary">PRO</span>
+          Odonto<span className="font-extrabold text-primary">PRO</span>
         </Link>
 
         <nav className="hidden items-center space-x-4 md:flex">

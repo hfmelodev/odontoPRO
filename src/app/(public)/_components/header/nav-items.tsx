@@ -47,7 +47,7 @@ export function NavItems({ setIsSheetOpen }: NavItemsProps) {
           <span>Painel da Clínica</span>
         </Link>
       ) : (
-        <Button className="mx-6">
+        <Button className="mx-6 mt-2 md:mt-0">
           <Link href="/login" className="flex items-center justify-center gap-1.5">
             <LogIn />
             Acessar Clínica
