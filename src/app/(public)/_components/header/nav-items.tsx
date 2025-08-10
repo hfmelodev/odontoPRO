@@ -52,7 +52,7 @@ export function NavItems({ setIsSheetOpen }: NavItemsProps) {
       ) : session ? (
         <Link
           href="/dashboard"
-          className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 font-medium text-sm transition-colors hover:bg-muted hover:text-primary"
+          className="mx-4 flex items-center justify-center gap-2 rounded-sm bg-muted px-3 py-2 font-medium text-sm transition-colors hover:bg-muted/50 hover:text-primary"
         >
           <LayoutDashboard className="size-5 text-primary" />
           <span>Painel da Clínica</span>
