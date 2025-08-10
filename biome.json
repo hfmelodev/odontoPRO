@@ -42,7 +42,8 @@
 			},
 			"style": {
 				"noNonNullAssertion": "off",
-				"noParameterAssign": "off"
+				"noParameterAssign": "off",
+				"useConst": "off"
 			}
 		}
 	},
