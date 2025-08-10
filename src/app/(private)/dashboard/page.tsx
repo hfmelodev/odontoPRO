@@ -1,9 +1,10 @@
 export default function Dashboard() {
   return (
     <main>
-      <div className="flex min-h-screen items-center justify-center">
-        <h1 className="font-bold text-9xl">Dashboard</h1>
-      </div>
+      <h1>Dashboard</h1>
+
+      <div className="mb-10 h-[600px] w-full bg-gray-500" />
+      <div className="mb-10 h-[600px] w-full bg-gray-900" />
     </main>
   )
 }

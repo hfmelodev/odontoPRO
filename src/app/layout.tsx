@@ -8,7 +8,7 @@ const geist = Geist({
 })
 
 export const metadata: Metadata = {
-  title: 'Odonto PRO',
+  title: 'OdontoPRO',
   icons: {
     icon: '/stethoscope.svg',
   },
