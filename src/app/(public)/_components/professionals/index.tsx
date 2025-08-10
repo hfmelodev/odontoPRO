@@ -16,7 +16,7 @@ export function Professionals() {
               <CardContent className="p-0">
                 <div>
                   <div className="relative h-48">
-                    <Image src="/clinics.png" alt="Foto ilustrativa de uma clínica" fill className="object-cover" />
+                    <Image src="/clinics.png" alt="Foto ilustrativa de uma clínica" fill className="object-cover" priority />
                   </div>
                 </div>
 
