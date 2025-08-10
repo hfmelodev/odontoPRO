@@ -1,16 +1,18 @@
 'use client'
 
-import { LayoutDashboard, Link as LinkIcon, LogIn } from 'lucide-react'
+import { LayoutDashboard, Link as LinkIcon, LoaderCircle, LogIn } from 'lucide-react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { handleRegister } from '../../_actions/authenticate'
 
 type NavItemsProps = {
   setIsSheetOpen: (open: boolean) => void
 }
 
 export function NavItems({ setIsSheetOpen }: NavItemsProps) {
-  const session = null
+  const { data: session, status } = useSession()
 
   const navItems = [
     {
@@ -22,6 +24,10 @@ export function NavItems({ setIsSheetOpen }: NavItemsProps) {
       href: '#receptionists',
     },
   ]
+
+  async function handleAuthentication() {
+    await handleRegister('github')
+  }
 
   return (
     <>
@@ -38,7 +44,12 @@ export function NavItems({ setIsSheetOpen }: NavItemsProps) {
 
       <Separator className="md:hidden" />
 
-      {session ? (
+      {status === 'loading' ? (
+        <Button>
+          <LoaderCircle className="animate-spin" />
+          Carregando...
+        </Button>
+      ) : session ? (
         <Link
           href="/dashboard"
           className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 font-medium text-sm transition-colors hover:bg-muted hover:text-primary"
@@ -47,11 +58,9 @@ export function NavItems({ setIsSheetOpen }: NavItemsProps) {
           <span>Painel da Clínica</span>
         </Link>
       ) : (
-        <Button className="mx-6 mt-2 md:mt-0">
-          <Link href="/login" className="flex items-center justify-center gap-1.5">
-            <LogIn />
-            Acessar Clínica
-          </Link>
+        <Button className="mx-6 mt-2 md:mt-0" onClick={handleAuthentication}>
+          <LogIn />
+          Acessar Clínica
         </Button>
       )}
     </>
