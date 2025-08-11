@@ -1,11 +1,4 @@
-import { redirect } from 'next/navigation'
-import getSession from '@/lib/session'
-
 export default async function Dashboard() {
-  const session = await getSession()
-
-  if (!session) redirect('/')
-
   return (
     <main>
       <h1>Dashboard</h1>
