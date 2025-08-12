@@ -8,15 +8,17 @@ type NavLinksProps = {
   label: string
   pathname: string
   isCollapsed: boolean
+  setIsSheetOpen: (open: boolean) => void
 }
 
-export function NavLinks({ href, icon, label, pathname, isCollapsed }: NavLinksProps) {
+export function NavLinks({ href, icon, label, pathname, isCollapsed, setIsSheetOpen }: NavLinksProps) {
   return (
     <Link href={href} className="mx-4 sm:mx-0">
       {!isCollapsed ? (
         <Button
           variant={pathname === href ? 'default' : 'outline'}
           className="w-full justify-start transition-all duration-100 ease-in-out"
+          onClick={() => setIsSheetOpen(false)}
         >
           {icon}
           {!isCollapsed && <span>{label}</span>}

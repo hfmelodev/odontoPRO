@@ -15,6 +15,7 @@ import { NavLinks } from './nav-links'
 export function SidebarDashboard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [isSibedarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
 
   return (
     <div className="flex min-h-screen w-full">
@@ -65,6 +66,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               label="Agendamentos"
               pathname={pathname}
               isCollapsed={isSibedarCollapsed}
+              setIsSheetOpen={setIsSheetOpen}
             />
             <NavLinks
               href="/dashboard/services"
@@ -72,6 +74,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               label="Serviços"
               pathname={pathname}
               isCollapsed={isSibedarCollapsed}
+              setIsSheetOpen={setIsSheetOpen}
             />
             <NavLinks
               href="/dashboard/profile"
@@ -79,6 +82,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               label="Perfil"
               pathname={pathname}
               isCollapsed={isSibedarCollapsed}
+              setIsSheetOpen={setIsSheetOpen}
             />
             <NavLinks
               href="/dashboard/plans"
@@ -86,6 +90,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               label="Planos"
               pathname={pathname}
               isCollapsed={isSibedarCollapsed}
+              setIsSheetOpen={setIsSheetOpen}
             />
           </nav>
         )}
@@ -101,6 +106,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                 label="Agendamentos"
                 pathname={pathname}
                 isCollapsed={isSibedarCollapsed}
+                setIsSheetOpen={setIsSheetOpen}
               />
               <NavLinks
                 href="/dashboard/services"
@@ -108,6 +114,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                 label="Serviços"
                 pathname={pathname}
                 isCollapsed={isSibedarCollapsed}
+                setIsSheetOpen={setIsSheetOpen}
               />
 
               <Separator className="my-2" />
@@ -119,6 +126,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                 label="Perfil"
                 pathname={pathname}
                 isCollapsed={isSibedarCollapsed}
+                setIsSheetOpen={setIsSheetOpen}
               />
               <NavLinks
                 href="/dashboard/plans"
@@ -126,6 +134,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                 label="Planos"
                 pathname={pathname}
                 isCollapsed={isSibedarCollapsed}
+                setIsSheetOpen={setIsSheetOpen}
               />
             </nav>
           </CollapsibleContent>
@@ -140,7 +149,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
       >
         {/* Sidebar em modo Mobile */}
         <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-muted/40 px-2 shadow-muted shadow-sm backdrop-blur-md md:hidden md:px-6">
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <div className="flex items-center gap-2.5">
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="md:hidden" onClick={() => setIsSidebarCollapsed(false)}>
@@ -170,6 +179,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                   label="Agendamentos"
                   pathname={pathname}
                   isCollapsed={isSibedarCollapsed}
+                  setIsSheetOpen={setIsSheetOpen}
                 />
                 <NavLinks
                   href="/dashboard/services"
@@ -177,6 +187,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                   label="Serviços"
                   pathname={pathname}
                   isCollapsed={isSibedarCollapsed}
+                  setIsSheetOpen={setIsSheetOpen}
                 />
 
                 <div className="my-1" />
@@ -188,6 +199,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                   label="Perfil"
                   pathname={pathname}
                   isCollapsed={isSibedarCollapsed}
+                  setIsSheetOpen={setIsSheetOpen}
                 />
                 <NavLinks
                   href="/dashboard/plans"
@@ -195,6 +207,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                   label="Planos"
                   pathname={pathname}
                   isCollapsed={isSibedarCollapsed}
+                  setIsSheetOpen={setIsSheetOpen}
                 />
               </nav>
             </SheetContent>

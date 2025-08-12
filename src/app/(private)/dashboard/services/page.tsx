@@ -1,9 +1,8 @@
-export default function Services() {
-  return (
-    <main>
-      <div className="flex min-h-screen items-center justify-center">
-        <h1>Services</h1>
-      </div>
-    </main>
-  )
+import { auth } from '@/lib/auth'
+import { ServiceContent } from './_components/service-content'
+
+export default async function Services() {
+  const session = await auth()
+
+  return <ServiceContent userId={session!.user.id} />
 }

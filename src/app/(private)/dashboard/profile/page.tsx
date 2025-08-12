@@ -5,7 +5,7 @@ import { getUserData } from './_dal/get-info-user'
 export default async function Profile() {
   const session = await getSession()
 
-  await getUserData({ userId: session!.user.id })
+  const user = await getUserData({ userId: session!.user.id })
 
-  return <ProfileContent />
+  return <ProfileContent user={user!} />
 }

@@ -12,16 +12,24 @@ const profileFormShema = z.object({
 
 export type ProfileFormType = z.infer<typeof profileFormShema>
 
-export function useProfileForm() {
+type useProfileFormProps = {
+  name: string | null
+  address: string | null
+  phone: string | null
+  status: boolean
+  timezone: string | null
+}
+
+export function useProfileForm({ name, address, phone, status, timezone }: useProfileFormProps) {
   return useForm<ProfileFormType>({
     shouldUnregister: true,
     resolver: zodResolver(profileFormShema),
     defaultValues: {
-      name: '',
-      address: '',
-      phone: '',
-      status: 'active',
-      timezone: '',
+      name: name || '',
+      address: address || '',
+      phone: phone || '',
+      status: status ? 'active' : 'inactive',
+      timezone: timezone || '',
     },
   })
 }

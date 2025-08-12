@@ -15,7 +15,7 @@ export function Hero() {
               Nós somos uma plataforma para profissionais de saúde com foco em agilizar seu atendimento de forma simplificada e
               organizada.
             </p>
-            <Button className="mt-4 flex w-fit items-center font-semibold">
+            <Button className="mt-4 mb-0 flex w-fit items-center font-semibold sm:mb-4">
               <Search />
               Encontre uma clínica
             </Button>

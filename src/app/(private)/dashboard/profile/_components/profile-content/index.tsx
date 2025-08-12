@@ -3,6 +3,7 @@
 import { Clock, Save } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -11,24 +12,49 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import type { Prisma } from '@/generated/prisma'
 import { cn } from '@/lib/utils'
+import { formatPhone } from '@/utils/format-phone'
+import { updateProfile } from '../../_actions/update-profile'
 import { generateTimeSlots } from '../../_utils/generate-time-slots'
 import { getBrazilTimezones } from '../../_utils/get-brazil-timezones'
 import { type ProfileFormType, useProfileForm } from '../profile-form'
 
-export function ProfileContent() {
-  const [selectedTimes, setSelectedTimes] = useState<string[]>([])
+type UserWithSubscription = Prisma.UserGetPayload<{ include: { subscription: true } }>
+
+interface ProfileContentProps {
+  user: UserWithSubscription
+}
+
+export function ProfileContent({ user }: ProfileContentProps) {
+  const [selectedTimes, setSelectedTimes] = useState<string[]>(user.times ?? [])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const form = useProfileForm()
+  const form = useProfileForm({
+    name: user.name,
+    address: user.address,
+    phone: user.phone,
+    status: user.status,
+    timezone: user.timezone,
+  })
 
   async function handleProfileForm(formData: ProfileFormType) {
-    const profileData = {
-      ...formData,
-      times: selectedTimes,
+    // Chamada da Server Action updateProfile
+    const response = await updateProfile({
+      name: formData.name,
+      address: formData.address,
+      phone: formData.phone,
+      status: formData.status === 'active',
+      timezone: formData.timezone,
+      times: selectedTimes || [],
+    })
+
+    if (response.error) {
+      toast.error(response.error)
+      return
     }
 
-    console.log(profileData)
+    toast.success(response.message)
   }
 
   const hours = generateTimeSlots({
@@ -61,7 +87,7 @@ export function ProfileContent() {
               <div className="flex justify-center">
                 <div className="relative h-40 w-40 overflow-hidden rounded-full border-2 border-primary">
                   <Image
-                    src="https://github.com/hfmelodev.png"
+                    src={user.image ? user.image : '/user.svg'}
                     alt="Foto de perfil da clínica"
                     priority
                     fill
@@ -107,7 +133,15 @@ export function ProfileContent() {
                     <FormItem>
                       <FormLabel>Telefone</FormLabel>
                       <FormControl>
-                        <Input placeholder="(00) 00000-0000" className="text-sm" {...field} />
+                        <Input
+                          placeholder="(00) 00000-0000"
+                          className="text-sm"
+                          {...field}
+                          onChange={e => {
+                            const formattedValue = formatPhone(e.target.value)
+                            field.onChange(formattedValue)
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -120,7 +154,7 @@ export function ProfileContent() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Status da Clínica</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue="active">
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-[50%] text-sm">
                             <SelectValue placeholder="Selecione o status" />
@@ -185,7 +219,7 @@ export function ProfileContent() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Selecione o fuso horário</FormLabel>
-                      <Select onValueChange={field.onChange}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-full text-sm">
                             <SelectValue placeholder="Defina seu fuso horário" />
