@@ -12,10 +12,17 @@ import { type ServiceFormType, useServiceForm } from '../dialog-service-form'
 
 type DialogServiceProps = {
   setIsDialogOpen: (open: boolean) => void
+  serviceId?: string
+  initialValues?: {
+    name: string
+    price: string
+    hours: string
+    minutes: string
+  }
 }
 
-export function DialogService({ setIsDialogOpen }: DialogServiceProps) {
-  const form = useServiceForm()
+export function DialogService({ setIsDialogOpen, serviceId, initialValues }: DialogServiceProps) {
+  const form = useServiceForm({ initialValues: initialValues })
 
   async function handleCreateService(formData: ServiceFormType) {
     const priceInCents = convertRealToCents({
@@ -33,8 +40,6 @@ export function DialogService({ setIsDialogOpen }: DialogServiceProps) {
       price: priceInCents,
       duration,
     })
-
-    console.log(response)
 
     if (response.error) {
       toast.error(response.error)
@@ -66,7 +71,12 @@ export function DialogService({ setIsDialogOpen }: DialogServiceProps) {
   }
 
   return (
-    <DialogContent>
+    <DialogContent
+      onInteractOutside={e => {
+        e.preventDefault()
+        setIsDialogOpen(false)
+      }}
+    >
       <DialogHeader className="text-left">
         <DialogTitle>Novo Serviço</DialogTitle>
         <DialogDescription>Adicionar um novo serviço</DialogDescription>

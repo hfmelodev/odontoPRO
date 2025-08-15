@@ -20,11 +20,11 @@ export type useProfileFormProps = {
   }
 }
 
-export function useServiceForm() {
+export function useServiceForm({ initialValues }: useProfileFormProps) {
   return useForm<ServiceFormType>({
     shouldUnregister: true,
     resolver: zodResolver(serviceFormShema),
-    defaultValues: {
+    defaultValues: initialValues || {
       name: '',
       price: '',
       hours: '',

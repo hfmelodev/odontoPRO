@@ -15,9 +15,10 @@ export async function getAllUserServices({ userId }: { userId: string }) {
       where: {
         userId,
       },
+      orderBy: {
+        status: 'desc',
+      },
     })
-
-    console.log(services)
 
     if (!services) {
       return {
