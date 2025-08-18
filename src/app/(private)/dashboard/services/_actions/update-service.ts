@@ -14,7 +14,7 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
-export async function updateService({ name, price, duration }: FormSchema) {
+export async function updateService({ serviceId, name, price, duration }: FormSchema) {
   const session = await auth()
 
   if (!session) {
@@ -24,12 +24,12 @@ export async function updateService({ name, price, duration }: FormSchema) {
     }
   }
 
-  const schema = formSchema.safeParse({ name, price, duration })
+  const schema = formSchema.safeParse({ serviceId, name, price, duration })
 
   if (!schema.success) {
     return {
       status: 400,
-      error: 'Ocorreu um erro ao deletar o serviço',
+      error: 'Ocorreu um erro ao atualizar o serviço',
     }
   }
 
@@ -47,6 +47,23 @@ export async function updateService({ name, price, duration }: FormSchema) {
     }
   }
 
+  const serviceNameExists = await prisma.service.findFirst({
+    where: {
+      name: schema.data.name,
+      userId: session.user.id,
+      NOT: {
+        id: schema.data.serviceId,
+      },
+    },
+  })
+
+  if (serviceNameExists) {
+    return {
+      status: 400,
+      error: 'Já existe um serviço com esse nome',
+    }
+  }
+
   try {
     await prisma.service.update({
       where: {
@@ -56,7 +73,7 @@ export async function updateService({ name, price, duration }: FormSchema) {
       data: {
         name: schema.data.name,
         price: schema.data.price,
-        duration: schema.data.duration,
+        duration: schema.data.duration < 30 ? 30 : schema.data.duration,
       },
     })
 

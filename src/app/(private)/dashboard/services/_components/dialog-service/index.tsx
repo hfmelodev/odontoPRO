@@ -1,6 +1,6 @@
 'use client'
 
-import { PlusCircle } from 'lucide-react'
+import { PlusCircle, Save } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { convertRealToCents } from '@/utils/convert-currency'
 import { createService } from '../../_actions/create-service'
+import { updateService } from '../../_actions/update-service'
 import { type ServiceFormType, useServiceForm } from '../dialog-service-form'
 
 type DialogServiceProps = {
@@ -21,8 +22,17 @@ type DialogServiceProps = {
   }
 }
 
+type EditServiceProps = {
+  serviceId: string
+  name: string
+  priceInCents: number
+  duration: number
+}
+
 export function DialogService({ setIsDialogOpen, serviceId, initialValues }: DialogServiceProps) {
-  const form = useServiceForm({ initialValues: initialValues })
+  const form = useServiceForm({
+    initialValues,
+  })
 
   async function handleCreateService(formData: ServiceFormType) {
     const priceInCents = convertRealToCents({
@@ -35,6 +45,17 @@ export function DialogService({ setIsDialogOpen, serviceId, initialValues }: Dia
     // Converte as horas e minutos para duração total em minutos
     const duration = hours * 60 + minutes
 
+    if (serviceId) {
+      await handleEditingServiceById({
+        serviceId,
+        name: formData.name,
+        priceInCents,
+        duration,
+      })
+
+      return
+    }
+
     const response = await createService({
       name: formData.name,
       price: priceInCents,
@@ -45,6 +66,26 @@ export function DialogService({ setIsDialogOpen, serviceId, initialValues }: Dia
       toast.error(response.error)
       return
     }
+
+    setIsDialogOpen(false)
+
+    toast.success(response.message)
+  }
+
+  async function handleEditingServiceById({ serviceId, name, priceInCents, duration }: EditServiceProps) {
+    const response = await updateService({
+      serviceId,
+      name,
+      price: priceInCents,
+      duration,
+    })
+
+    if (response.error) {
+      toast.error(response.error)
+      return
+    }
+
+    setIsDialogOpen(false)
 
     toast.success(response.message)
   }
@@ -71,12 +112,7 @@ export function DialogService({ setIsDialogOpen, serviceId, initialValues }: Dia
   }
 
   return (
-    <DialogContent
-      onInteractOutside={e => {
-        e.preventDefault()
-        setIsDialogOpen(false)
-      }}
-    >
+    <DialogContent>
       <DialogHeader className="text-left">
         <DialogTitle>Novo Serviço</DialogTitle>
         <DialogDescription>Adicionar um novo serviço</DialogDescription>
@@ -145,14 +181,18 @@ export function DialogService({ setIsDialogOpen, serviceId, initialValues }: Dia
             </div>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full font-semibold"
-            disabled={form.formState.isSubmitting}
-            onClick={() => setIsDialogOpen(false)}
-          >
-            <PlusCircle />
-            Adicionar serviço
+          <Button type="submit" className="w-full font-semibold" disabled={form.formState.isSubmitting}>
+            {serviceId ? (
+              <>
+                <Save />
+                Salvar alterações
+              </>
+            ) : (
+              <>
+                <PlusCircle />
+                Adicionar serviço
+              </>
+            )}
           </Button>
         </form>
       </Form>

@@ -19,10 +19,10 @@ type ServiceListProps = {
 
 export function ServiceList({ services }: ServiceListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editService, setEditService] = useState<null | Service>(null)
+  const [editingService, setEditingService] = useState<Service | null>(null)
 
-  function handleUpdateService(service: Service) {
-    setEditService(service)
+  async function handleUpdateService(service: Service) {
+    setEditingService(service)
     setIsDialogOpen(true)
   }
 
@@ -33,24 +33,26 @@ export function ServiceList({ services }: ServiceListProps) {
           <CardHeader className="mb-4 flex flex-row items-center justify-between space-y-0">
             <CardTitle className="font-bold text-xl md:text-2xl">Serviços</CardTitle>
             <DialogTrigger asChild>
-              <Button variant="outline" className="hover:border! transition-all duration-200 ease-in-out hover:border-primary!">
+              <Button
+                onClick={() => setEditingService(null)}
+                variant="outline"
+                className="hover:border! transition-all duration-200 ease-in-out hover:border-primary!"
+              >
                 <PlusIcon />
               </Button>
             </DialogTrigger>
 
             <DialogService
-              setIsDialogOpen={() => {
-                setIsDialogOpen(false)
-                setEditService(null)
-              }}
-              serviceId={editService ? editService.id : undefined}
+              key={editingService ? `${editingService.id}-${editingService.price}-${editingService.duration}` : 'create'}
+              setIsDialogOpen={setIsDialogOpen}
+              serviceId={editingService ? editingService.id : undefined}
               initialValues={
-                editService
+                editingService
                   ? {
-                      name: editService.name,
-                      price: formatCurrency(editService.price / 100),
-                      hours: Math.floor(editService.duration / 60).toString(),
-                      minutes: (editService.duration % 60).toString(),
+                      name: editingService.name,
+                      price: (editingService.price / 100).toFixed(2).replace('.', ','),
+                      hours: Math.floor(editingService.duration / 60).toString(),
+                      minutes: (editingService.duration % 60).toString(),
                     }
                   : undefined
               }
