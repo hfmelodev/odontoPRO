@@ -39,6 +39,7 @@ export function DialogService({ setIsDialogOpen, serviceId, initialValues }: Dia
       amount: formData.price,
     })
 
+    // O parseInt converte uma string em um número inteiro
     const hours = parseInt(formData.hours) || 0
     const minutes = parseInt(formData.minutes) || 0
 
@@ -101,9 +102,10 @@ export function DialogService({ setIsDialogOpen, serviceId, initialValues }: Dia
         style: 'currency',
         currency: 'BRL',
         minimumFractionDigits: 2,
-      }).format(parseInt(value, 10) / 100)
+      }).format(parseInt(value, 10) / 100) // Converte de centavos para reais e formata com duas casas decimais separadas por ponto e virgula (PT-BR). Ex: 1000,00
 
       event.target.value = formatted
+      // Atualiza o valor do campo com o valor formatado
       form.setValue('price', formatted)
     } else {
       event.target.value = ''

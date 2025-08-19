@@ -42,8 +42,13 @@ export function ServiceList({ services }: ServiceListProps) {
               </Button>
             </DialogTrigger>
 
+            {/* Conteudo que será exibido quando o dialog estiver aberto */}
             <DialogService
-              key={editingService ? `${editingService.id}-${editingService.price}-${editingService.duration}` : 'create'}
+              key={
+                editingService
+                  ? `${editingService.id}-${editingService.name}-${editingService.price}-${editingService.duration}`
+                  : 'create'
+              }
               setIsDialogOpen={setIsDialogOpen}
               serviceId={editingService ? editingService.id : undefined}
               initialValues={

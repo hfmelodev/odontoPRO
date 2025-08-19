@@ -1,8 +1,10 @@
 'use client'
 
-import { Banknote, CalendarCheck2, Folder, List, PanelLeft, PanelRight, Stethoscope, User2 } from 'lucide-react'
+import { Banknote, CalendarCheck2, Folder, List, LogOut, PanelLeft, PanelRight, Stethoscope, User2 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { signOut, useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
@@ -13,6 +15,8 @@ import { cn } from '@/lib/utils'
 import { NavLinks } from './nav-links'
 
 export function SidebarDashboard({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession()
+
   const pathname = usePathname()
   const [isSibedarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
@@ -139,6 +143,31 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
             </nav>
           </CollapsibleContent>
         </Collapsible>
+
+        <div className="mt-auto hidden w-full space-y-4 md:block">
+          {/* Perfil */}
+          <div className="flex items-center gap-3 rounded-md bg-muted/40 px-3 py-2 shadow-sm">
+            <Image src={session?.user?.image || ''} alt="avatar" width={40} height={40} className="rounded-full" />
+            {!isSibedarCollapsed && (
+              <div className="flex flex-col">
+                <p className="font-medium text-foreground text-sm">{session?.user?.name}</p>
+                <p className="text-muted-foreground text-xs">{session?.user?.email}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Botão de Sair */}
+          {status === 'authenticated' && (
+            <Button
+              variant="outline"
+              className="hover:border! w-full transition-all duration-200 hover:border-red-500!"
+              onClick={() => signOut({ redirectTo: '/' })}
+            >
+              <LogOut />
+              {!isSibedarCollapsed && <span>Sair</span>}
+            </Button>
+          )}
+        </div>
       </aside>
 
       <div
@@ -210,6 +239,39 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
                   setIsSheetOpen={setIsSheetOpen}
                 />
               </nav>
+
+              <div className="mt-auto space-y-4 px-4 md:hidden">
+                <div className="flex items-center gap-3 rounded-md bg-muted/40 px-3 py-2 shadow-sm">
+                  <Image
+                    src={session?.user?.image || ''}
+                    alt={session?.user?.name || ''}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                  {!isSibedarCollapsed && (
+                    <div className="flex flex-col">
+                      <p className="font-medium text-foreground text-sm">{session?.user?.name}</p>
+                      <p className="text-muted-foreground text-xs">{session?.user?.email}</p>
+                    </div>
+                  )}
+                </div>
+
+                {status === 'authenticated' && (
+                  <Button
+                    variant="destructive"
+                    className="mb-2 w-full transition-all duration-150 hover:opacity-80"
+                    onClick={() =>
+                      signOut({
+                        callbackUrl: '/',
+                      })
+                    }
+                  >
+                    <LogOut />
+                    Sair
+                  </Button>
+                )}
+              </div>
             </SheetContent>
           </Sheet>
         </header>
