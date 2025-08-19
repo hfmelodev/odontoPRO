@@ -146,8 +146,8 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
 
         <div className="mt-auto hidden w-full space-y-4 md:block">
           {/* Perfil */}
-          <div className="flex items-center gap-3 rounded-md bg-muted/40 px-3 py-2 shadow-sm">
-            <Image src={session?.user?.image || ''} alt="avatar" width={40} height={40} className="rounded-full" />
+          <div className="flex items-center gap-3 rounded-md bg-muted/40 px-3 py-2">
+            <Image src={session?.user?.image || '/user.svg'} alt="avatar" width={40} height={40} className="rounded-full" />
             {!isSibedarCollapsed && (
               <div className="flex flex-col">
                 <p className="font-medium text-foreground text-sm">{session?.user?.name}</p>
@@ -164,7 +164,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               onClick={() => signOut({ redirectTo: '/' })}
             >
               <LogOut />
-              {!isSibedarCollapsed && <span>Sair</span>}
+              {!isSibedarCollapsed && 'Sair'}
             </Button>
           )}
         </div>
@@ -243,7 +243,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               <div className="mt-auto space-y-4 px-4 md:hidden">
                 <div className="flex items-center gap-3 rounded-md bg-muted/40 px-3 py-2 shadow-sm">
                   <Image
-                    src={session?.user?.image || ''}
+                    src={session?.user?.image || '/user.svg'}
                     alt={session?.user?.name || ''}
                     width={40}
                     height={40}
