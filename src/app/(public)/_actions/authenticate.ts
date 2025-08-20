@@ -2,6 +2,8 @@
 
 import { signIn } from '@/lib/auth'
 
-export async function handleRegister(provider: string) {
+type ProviderTypes = 'github'
+
+export async function handleRegister(provider: ProviderTypes) {
   await signIn(provider, { redirectTo: '/dashboard' })
 }
