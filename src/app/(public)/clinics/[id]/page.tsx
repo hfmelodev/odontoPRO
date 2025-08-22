@@ -11,5 +11,5 @@ export default async function SchedulePage({ params }: { params: Promise<{ id: s
     redirect('/')
   }
 
-  return <ScheduleContent />
+  return <ScheduleContent clinic={user} />
 }
