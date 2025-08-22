@@ -5,7 +5,9 @@ import Image from 'next/image'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import type { Prisma } from '@/generated/prisma'
+import { formatPhone } from '@/utils/format-phone'
 import { useAppointmentForm } from '../schedule-form'
+import { DatePickerTimer } from './date-picker'
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -58,7 +60,58 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <FormItem className="space-y-1.5">
                   <FormLabel className="font-semibold">Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite o nome do serviço" className="text-sm" {...field} />
+                    <Input id="" placeholder="Digite o nome completo" className="text-sm" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="font-semibold">E-mail</FormLabel>
+                  <FormControl>
+                    <Input id="email" placeholder="Digite o seu e-mail" className="text-sm" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="font-semibold">Telefone</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="phone"
+                      placeholder="(99) 99999-9999"
+                      className="text-sm"
+                      {...field}
+                      onChange={e => {
+                        const formattedValue = formatPhone(e.target.value)
+                        field.onChange(formattedValue)
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="font-semibold">Data do agendamento</FormLabel>
+                  <FormControl>
+                    <DatePickerTimer minDate={new Date()} initialDate={new Date()} onChange={date => field.onChange(date)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
