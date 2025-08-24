@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={cn(geist.className, 'dark antialiased')}>
         <SessionAuthProvider>
           <Toaster richColors theme="dark" position="top-right" />

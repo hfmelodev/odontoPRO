@@ -9,7 +9,7 @@ export const appointmentFormSchema = z.object({
   email: z.email('O email é obrigatório'),
   phone: z.string().nonempty('O telefone é obrigatório').trim(),
   date: z.date(),
-  serviceId: z.cuid().nonempty('O serviço é obrigatório'),
+  serviceId: z.cuid('O serviço é obrigatório'),
 })
 
 export type AppointmentFormType = z.infer<typeof appointmentFormSchema>

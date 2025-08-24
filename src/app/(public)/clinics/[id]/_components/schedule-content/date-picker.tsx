@@ -12,10 +12,11 @@ import { cn } from '@/lib/utils'
 interface DatePickerTimerProps {
   minDate?: Date
   initialDate?: Date
+  disabled?: boolean
   onChange: (date: Date) => void
 }
 
-export function DatePickerTimer({ minDate, initialDate, onChange }: DatePickerTimerProps) {
+export function DatePickerTimer({ minDate, initialDate, onChange, disabled }: DatePickerTimerProps) {
   const [startDate, setStartDate] = useState(initialDate || new Date())
 
   function handleChange(date: Date | null) {
@@ -31,7 +32,8 @@ export function DatePickerTimer({ minDate, initialDate, onChange }: DatePickerTi
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn('w-full justify-start text-left font-normal', !startDate && 'text-muted-foreground')}
+          disabled={disabled}
+          className={cn('w-full justify-start text-left font-normal md:w-[50%]', !startDate && 'text-muted-foreground')}
         >
           <CalendarIcon className="mr-1" />
           {startDate ? format(startDate, 'dd/MM/yyyy', { locale: ptBR }) : <span>Selecione a data</span>}
