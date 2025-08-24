@@ -39,7 +39,7 @@ export function DatePickerTimer({ minDate, initialDate, onChange, disabled }: Da
           {startDate ? format(startDate, 'dd/MM/yyyy', { locale: ptBR }) : <span>Selecione a data</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="center">
         <Calendar
           mode="single"
           selected={startDate}

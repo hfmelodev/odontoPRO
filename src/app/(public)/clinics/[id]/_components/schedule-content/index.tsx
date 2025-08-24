@@ -1,7 +1,8 @@
 'use client'
 
-import { CalendarCheck, CircleX, ClosedCaption, MapPin } from 'lucide-react'
+import { CalendarCheck, CircleX, MapPin } from 'lucide-react'
 import Image from 'next/image'
+import { useCallback, useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -23,8 +24,57 @@ interface ScheduleContentProps {
   clinic: UserWithServiceAndSubscription
 }
 
+type TimeSlotsProps = {
+  time: string
+  available: boolean
+}
+
 export function ScheduleContent({ clinic }: ScheduleContentProps) {
   const form = useAppointmentForm()
+
+  const selectedDate = form.watch('date')
+  const selectedServiceId = form.watch('serviceId')
+
+  const [selectedTime, setSelectedTime] = useState('')
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<TimeSlotsProps[]>([])
+  const [blockedTimes, setBlockedTimes] = useState<string[]>([])
+
+  // Busca quais horários estão bloqueados para agendamento
+  const fetchBlockedTimes = useCallback(
+    async (date: Date): Promise<string[]> => {
+      try {
+        const dateString = date.toISOString().split('T')[0]
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`
+        )
+        const data = await response.json()
+
+        return data
+      } catch (err) {
+        console.log(err)
+        return []
+      }
+    },
+    [clinic.id]
+  )
+
+  useEffect(() => {
+    if (selectedDate) {
+      fetchBlockedTimes(selectedDate).then(blockedTimes => {
+        setBlockedTimes(blockedTimes)
+
+        const times = clinic.times || []
+
+        const finalSlotsAvailables = times.map(time => ({
+          time,
+          available: !blockedTimes.includes(time),
+        }))
+
+        setAvailableTimeSlots(finalSlotsAvailables)
+      })
+    }
+  }, [selectedDate, fetchBlockedTimes, clinic.times])
 
   async function handleNewAppointment(formData: AppointmentFormType) {
     console.log(formData)
@@ -68,7 +118,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="space-y-1.5">
+                <FormItem>
                   <FormLabel htmlFor="name" className="font-semibold">
                     Nome
                   </FormLabel>
@@ -90,7 +140,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem className="space-y-1.5">
+                <FormItem>
                   <FormLabel htmlFor="email" className="font-semibold">
                     E-mail
                   </FormLabel>
@@ -112,7 +162,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               control={form.control}
               name="phone"
               render={({ field }) => (
-                <FormItem className="space-y-1.5">
+                <FormItem>
                   <FormLabel htmlFor="phone" className="font-semibold">
                     Telefone
                   </FormLabel>
@@ -138,7 +188,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem className="space-y-1.5">
+                <FormItem>
                   <FormLabel className="font-semibold">Data do agendamento</FormLabel>
                   <FormControl>
                     <DatePickerTimer
@@ -160,7 +210,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               control={form.control}
               name="serviceId"
               render={({ field }) => (
-                <FormItem className="space-y-1.5">
+                <FormItem>
                   <FormLabel className="font-semibold">Serviço</FormLabel>
                   <Select onValueChange={field.onChange}>
                     <FormControl>
@@ -193,7 +243,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
             />
 
             {clinic.status ? (
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                 <CalendarCheck />
                 Realizar agendamento
               </Button>
