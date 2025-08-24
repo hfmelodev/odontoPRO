@@ -2,8 +2,10 @@
 
 import { MapPin } from 'lucide-react'
 import Image from 'next/image'
+import { Badge } from '@/components/ui/badge'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { Prisma } from '@/generated/prisma'
 import { formatPhone } from '@/utils/format-phone'
 import { useAppointmentForm } from '../schedule-form'
@@ -121,6 +123,42 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                       }}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="serviceId"
+              render={({ field }) => (
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="font-semibold">Serviço</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-[50%] text-sm">
+                        <SelectValue placeholder="Selecione o serviço" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {clinic.services.map(service => (
+                        <SelectItem key={service.id} value={service.id} className="flex items-center justify-between py-2">
+                          <span className="font-medium">{service.name}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="border-primary font-semibold">
+                              R$ {(service.price / 100).toFixed(2)}
+                            </Badge>
+                            {service.duration > 0 && (
+                              <span className="text-muted-foreground text-sm">
+                                {Math.floor(service.duration / 60) > 0 && `${Math.floor(service.duration / 60)}h`}
+                                {service.duration % 60 > 0 && ` ${service.duration % 60}min`}
+                              </span>
+                            )}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
