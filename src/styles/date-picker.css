@@ -1,0 +1,53 @@
+/* --- Dark theme para react-datepicker (usando tokens do tema) --- */
+.dark .react-datepicker {
+  background-color: var(--popover);
+  border: 1px solid var(--border);
+  color: var(--popover-foreground);
+}
+
+.dark .react-datepicker__header {
+  background-color: var(--card);
+  border-bottom: 1px solid var(--border);
+  color: var(--card-foreground);
+}
+
+.dark .react-datepicker__current-month,
+.dark .react-datepicker-time__header,
+.dark .react-datepicker-year-header {
+  color: var(--foreground);
+}
+
+.dark .react-datepicker__day,
+.dark .react-datepicker__day-name {
+  color: var(--foreground);
+}
+
+.dark .react-datepicker__day:hover,
+.dark .react-datepicker__day-name:hover {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  border-radius: var(--radius-sm);
+}
+
+.dark .react-datepicker__day--selected,
+.dark .react-datepicker__day--keyboard-selected {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: var(--radius-sm);
+}
+.dark .react-datepicker__day--selected:hover,
+.dark .react-datepicker__day--keyboard-selected:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.dark .react-datepicker__day--disabled {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+.dark .react-datepicker__day--disabled:hover {
+  background-color: transparent;
+  color: var(--muted-foreground);
+}
+.dark .react-datepicker__triangle {
+  display: none
+}

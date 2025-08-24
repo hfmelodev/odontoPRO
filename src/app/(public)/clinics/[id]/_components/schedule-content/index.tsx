@@ -35,6 +35,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 src={clinic.image ? clinic.image : '/user.svg'}
                 alt="Foto ilustrativa de uma clínica"
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover"
                 priority
               />
@@ -111,7 +112,14 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <FormItem className="space-y-1.5">
                   <FormLabel className="font-semibold">Data do agendamento</FormLabel>
                   <FormControl>
-                    <DatePickerTimer minDate={new Date()} initialDate={new Date()} onChange={date => field.onChange(date)} />
+                    <DatePickerTimer
+                      initialDate={new Date()}
+                      onChange={(date: Date) => {
+                        if (date) {
+                          field.onChange(date)
+                        }
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

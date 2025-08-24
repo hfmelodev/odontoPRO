@@ -1,50 +1,52 @@
 'use client'
+
+import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ChevronDownIcon } from 'lucide-react'
-import * as React from 'react'
+import { CalendarIcon } from 'lucide-react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
-type DatePickerTimerProps = {
+interface DatePickerTimerProps {
   minDate?: Date
   initialDate?: Date
   onChange: (date: Date) => void
 }
 
 export function DatePickerTimer({ minDate, initialDate, onChange }: DatePickerTimerProps) {
-  const [open, setOpen] = React.useState(false)
-  const [startDate, setStartDate] = React.useState<Date | undefined>(initialDate)
+  const [startDate, setStartDate] = useState(initialDate || new Date())
 
-  const handleSelect = (date: Date | undefined) => {
-    if (!date) return
-
-    setStartDate(date)
-    onChange(date)
-    setOpen(false)
+  function handleChange(date: Date | null) {
+    if (date) {
+      console.log(date)
+      setStartDate(date)
+      onChange(date)
+    }
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" id="date" className="w-48 justify-between font-normal">
-            {startDate ? startDate.toLocaleDateString('pt-BR') : 'Selecione uma data'}
-            <ChevronDownIcon className="ml-2 h-4 w-4 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-          <Calendar
-            locale={ptBR}
-            mode="single"
-            selected={startDate}
-            onSelect={handleSelect}
-            captionLayout="dropdown"
-            disabled={date => !!minDate && date < minDate}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn('w-full justify-start text-left font-normal', !startDate && 'text-muted-foreground')}
+        >
+          <CalendarIcon className="mr-1" />
+          {startDate ? format(startDate, 'dd/MM/yyyy', { locale: ptBR }) : <span>Selecione a data</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={startDate}
+          onSelect={handleChange}
+          disabled={{ before: minDate || new Date() }}
+          locale={ptBR}
+          required
+        />
+      </PopoverContent>
+    </Popover>
   )
 }
