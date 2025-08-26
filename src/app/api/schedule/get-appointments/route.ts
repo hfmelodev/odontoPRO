@@ -37,18 +37,27 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // Cria um conjunto para armazenar horários bloqueados
+    // Set guarda apenas valores únicos (não permite duplicados)
+    // Aqui vamos usar para armazenar os horários que já estão ocupados
     const blockedSlots = new Set<string>()
 
     for (const apt of appointments) {
+      // Calcula quantos blocos de 30min o serviço ocupa
+      // Ex: duração 90min → 90/30 = 3 blocos
       const requiredSlots = Math.ceil(apt.service.duration / 30)
+
+      // Descobre a posição (índice) do horário inicial dentro da agenda
+      // Ex: ["09:00","09:30","10:00"].indexOf("09:30") → 1
       const startIndex = user.times.indexOf(apt.time)
 
-      // Adiciona os horários bloqueados ao conjunto
+      // Se o horário inicial existir na agenda
       if (startIndex !== -1) {
+        // Percorre todos os blocos necessários
         for (let i = 0; i < requiredSlots; i++) {
+          // Pega o horário correspondente ao bloco atual. Ex: "09:30"
           const blockedSlot = user.times[startIndex + i]
 
+          // Se existir, adiciona ao Set (sem risco de duplicar)
           if (blockedSlot) {
             blockedSlots.add(blockedSlot)
           }
@@ -56,6 +65,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Converte o Set de volta para array para ser usado em outras partes
     const blockedTimes = Array.from(blockedSlots)
 
     return NextResponse.json(blockedTimes, { status: 200 })

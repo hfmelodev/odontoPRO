@@ -3,15 +3,20 @@
 import { CalendarCheck, CircleX, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { Prisma } from '@/generated/prisma'
 import { formatPhone } from '@/utils/format-phone'
+import { createNewAppointment } from '../../_actions/create-appointment'
 import { type AppointmentFormType, useAppointmentForm } from '../schedule-form'
 import { DatePickerTimer } from './date-picker'
+import { ScheduleTimeList } from './schedule-time-list'
 
 type UserWithServiceAndSubscription = Prisma.UserGetPayload<{
   include: {
@@ -24,7 +29,7 @@ interface ScheduleContentProps {
   clinic: UserWithServiceAndSubscription
 }
 
-type TimeSlotsProps = {
+export type TimeSlotsProps = {
   time: string
   available: boolean
 }
@@ -48,6 +53,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/schedule/get-appointments?userId=${clinic.id}&date=${dateString}`
         )
+
         const data = await response.json()
 
         return data
@@ -77,8 +83,34 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
   }, [selectedDate, fetchBlockedTimes, clinic.times])
 
   async function handleNewAppointment(formData: AppointmentFormType) {
-    console.log(formData)
+    if (!selectedTime) {
+      toast.warning('Por favor, selecione um horário')
+      return
+    }
+
+    const response = await createNewAppointment({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      date: formData.date,
+      time: selectedTime,
+      serviceId: formData.serviceId,
+      clinicId: clinic.id,
+    })
+
+    if (response.error) {
+      toast.error(response.error)
+      return
+    }
+
+    toast.success(response.message)
+
+    form.reset()
+    setSelectedTime('')
   }
+
+  // Busca o serviço selecionado da clínica atual
+  const selectedService = clinic.services.find(service => service.id === selectedServiceId)
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -211,7 +243,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
               name="serviceId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-semibold">Serviço</FormLabel>
+                  <FormLabel className="font-semibold">Escolha o serviço</FormLabel>
                   <Select onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-full text-sm md:w-[50%]" disabled={!clinic.status}>
@@ -241,6 +273,38 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
+
+            {selectedServiceId && (
+              <div className="space-y-2">
+                <Label className="font-semibold">Horários disponíveis</Label>
+
+                <div className="rounded-md bg-muted/40 p-3">
+                  {selectedDate && availableTimeSlots.length === 0 ? (
+                    // ainda não carregou nada
+                    <div className="grid grid-cols-4 gap-1 md:grid-cols-5">
+                      <Skeleton className="h-8 w-20 rounded-md" />
+                      <Skeleton className="h-8 w-20 rounded-md" />
+                      <Skeleton className="h-8 w-20 rounded-md" />
+                      <Skeleton className="h-8 w-20 rounded-md" />
+                      <Skeleton className="h-8 w-20 rounded-md" />
+                    </div>
+                  ) : availableTimeSlots.length > 0 ? (
+                    // COMPONENT: Schedule Time List
+                    <ScheduleTimeList
+                      onSelectTime={time => setSelectedTime(time)}
+                      clinicTimes={clinic.times}
+                      blockedTimes={blockedTimes}
+                      availableTimeSlots={availableTimeSlots}
+                      selectedTime={selectedTime}
+                      selectedDate={selectedDate}
+                      requiredSlots={selectedService ? Math.ceil(selectedService.duration / 30) : 1}
+                    />
+                  ) : (
+                    <p className="text-center text-muted-foreground text-sm">Nenhum horário disponível para este serviço</p>
+                  )}
+                </div>
+              </div>
+            )}
 
             {clinic.status ? (
               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
