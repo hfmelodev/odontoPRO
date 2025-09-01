@@ -68,6 +68,8 @@ export async function GET(request: NextRequest) {
     // Converte o Set de volta para array para ser usado em outras partes
     const blockedTimes = Array.from(blockedSlots)
 
+    console.log(blockedTimes)
+
     return NextResponse.json(blockedTimes, { status: 200 })
   } catch (err) {
     console.log(err)

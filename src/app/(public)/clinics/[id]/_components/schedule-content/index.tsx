@@ -77,10 +77,17 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
           available: !blockedTimes.includes(time),
         }))
 
+        // Verifica se o horário selecionado ainda está disponível de acordo com os horários bloqueados
+        const stillAvailable = finalSlotsAvailables.find(slot => slot.time === selectedTime && slot.available)
+        // Se não estiver mais disponível, limpa o horário selecionado
+        if (!stillAvailable) {
+          setSelectedTime('')
+        }
+
         setAvailableTimeSlots(finalSlotsAvailables)
       })
     }
-  }, [selectedDate, fetchBlockedTimes, clinic.times])
+  }, [selectedDate, fetchBlockedTimes, clinic.times, selectedTime])
 
   async function handleNewAppointment(formData: AppointmentFormType) {
     if (!selectedTime) {
@@ -141,7 +148,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
       {/* Formulário de agendamento */}
       <Form {...form}>
-        <div className="flex items-center justify-center px-4">
+        <div className="mb-10 flex items-center justify-center px-4">
           <form
             onSubmit={form.handleSubmit(handleNewAppointment)}
             className="w-full space-y-6 rounded-md border p-5 shadow-sm md:max-w-2xl"
