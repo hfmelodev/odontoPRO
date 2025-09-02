@@ -174,7 +174,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="email"
@@ -196,7 +195,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="phone"
@@ -222,7 +220,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="date"
@@ -236,6 +233,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                       onChange={(date: Date) => {
                         if (date) {
                           field.onChange(date)
+                          setSelectedTime('')
                         }
                       }}
                     />
@@ -244,14 +242,18 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="serviceId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-semibold">Escolha o serviço</FormLabel>
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={value => {
+                      field.onChange(value)
+                      setSelectedTime('')
+                    }}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full text-sm md:w-[50%]" disabled={!clinic.status}>
                         <SelectValue placeholder="Selecione o serviço" />
@@ -280,7 +282,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-
             {selectedServiceId && (
               <div className="space-y-2">
                 <Label className="font-semibold">Horários disponíveis</Label>
@@ -312,7 +313,6 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </div>
               </div>
             )}
-
             {clinic.status ? (
               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                 <CalendarCheck />
