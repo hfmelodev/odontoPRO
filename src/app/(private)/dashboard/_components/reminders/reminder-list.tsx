@@ -1,19 +1,24 @@
 'use client'
 
 import { Bell, Plus, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import type { Reminder } from '@/generated/prisma'
 import { deleteReminder } from '../../_actions/delete-reminder'
+import { ReminderContent } from './reminder-content'
 
 type ReminderListProps = {
   reminders: Reminder[]
 }
 
 export function ReminderList({ reminders }: ReminderListProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
   async function handleDeleteReminder(reminderId: string) {
     const response = await deleteReminder({ reminderId })
 
@@ -36,9 +41,28 @@ export function ReminderList({ reminders }: ReminderListProps) {
           <CardDescription>Confira sua lista de lembretes</CardDescription>
         </div>
 
-        <Button variant="secondary" size="icon">
-          <Plus className="size-5" />
-        </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="secondary" size="icon">
+              <Plus className="size-5" />
+            </Button>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader className="text-left">
+              <DialogTitle className="flex items-center gap-1.5">
+                <Bell className="size-5" />
+                Novo lembrete
+              </DialogTitle>
+              <DialogDescription>Adicione um novo lembrete para sua lista</DialogDescription>
+            </DialogHeader>
+
+            <Separator />
+
+            {/* COMPONENT: Novo lembrete */}
+            <ReminderContent setIsDialogOpen={setIsDialogOpen} />
+          </DialogContent>
+        </Dialog>
       </CardHeader>
 
       <div className="px-2">
@@ -53,10 +77,7 @@ export function ReminderList({ reminders }: ReminderListProps) {
         <ScrollArea className="h-[340px] w-full lg:max-h-[calc(100vh-15rem)]">
           <div className="pr-4">
             {reminders.map(reminder => (
-              <article
-                key={reminder.id}
-                className="mb-2 flex flex-row flex-wrap items-center justify-between rounded-md bg-amber-100 px-4 py-2"
-              >
+              <article key={reminder.id} className="mb-2 flex items-center justify-between rounded-md bg-amber-100 px-3 py-2">
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold text-muted text-sm lg:text-base">{reminder.description}</p>
                   <p className="text-muted/70 text-xs italic">
