@@ -74,28 +74,26 @@ export function ReminderList({ reminders }: ReminderListProps) {
           <p className="text-center text-muted-foreground text-xs lg:text-sm">Você não possui lembretes cadastrados</p>
         )}
 
-        <ScrollArea className="h-[340px] w-full lg:max-h-[calc(100vh-15rem)]">
-          <div className="pr-4">
-            {reminders.map(reminder => (
-              <article key={reminder.id} className="mb-2 flex items-center justify-between rounded-md bg-amber-100 px-3 py-2">
-                <div className="flex flex-col gap-1">
-                  <p className="font-semibold text-muted text-sm lg:text-base">{reminder.description}</p>
-                  <p className="text-muted/70 text-xs italic">
-                    Criado em {reminder.createdAt.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </p>
-                </div>
+        <ScrollArea className="h-[340px] w-full pr-4">
+          {reminders.map(reminder => (
+            <article key={reminder.id} className="mb-2 flex items-center justify-between rounded-md bg-amber-100 px-3 py-2">
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold text-muted text-sm lg:text-base">{reminder.description}</p>
+                <p className="text-muted/70 text-xs italic">
+                  Criado em {reminder.createdAt.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              </div>
 
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleDeleteReminder(reminder.id)}
-                  className="text-amber-900 transition-all duration-300 ease-in-out hover:bg-amber-800!"
-                >
-                  <Trash2 className="size-5" />
-                </Button>
-              </article>
-            ))}
-          </div>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => handleDeleteReminder(reminder.id)}
+                className="text-amber-900 transition-all duration-300 ease-in-out hover:bg-amber-800!"
+              >
+                <Trash2 className="size-5" />
+              </Button>
+            </article>
+          ))}
         </ScrollArea>
       </CardContent>
     </Card>
