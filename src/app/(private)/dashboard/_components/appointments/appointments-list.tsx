@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { Calendar, Clock, Loader, Loader2 } from 'lucide-react'
+import { Calendar, Clock, Loader2 } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
