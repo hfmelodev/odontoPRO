@@ -12,18 +12,21 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { Prisma } from '@/generated/prisma'
 import { formatDuration } from '@/utils/format-duration'
+import { ChoosePickerDate } from './choose-date'
 import { DeleteAppointment } from './delete-appointment'
+import { DetailsAppointment } from './details-appointment'
 
 type AppointmentsListProps = {
   times: string[]
 }
 
-type AppointmentWithService = Prisma.AppointmentGetPayload<{
+export type AppointmentWithService = Prisma.AppointmentGetPayload<{
   include: { service: true }
 }>
 
 export function AppointmentsList({ times }: AppointmentsListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDialogOpenDetails, setIsDialogOpenDetails] = useState(false)
 
   const searchParams = useSearchParams()
   const date = searchParams.get('date') as string
@@ -87,7 +90,8 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
           Agendamentos
         </CardTitle>
 
-        <Button variant="outline">Selecionar data</Button>
+        {/* COMPONENT: Escolher data do agendamento */}
+        <ChoosePickerDate />
       </CardHeader>
 
       <CardContent>
@@ -142,9 +146,16 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
 
                     <div className="ml-auto">
                       <div className="flex flex-col items-center gap-2 xl:flex-row">
-                        <Button size="icon" variant="outline" className="border! hover:border-primary!">
-                          <Eye className="size-4" />
-                        </Button>
+                        <Dialog open={isDialogOpenDetails} onOpenChange={setIsDialogOpenDetails}>
+                          <DialogTrigger asChild>
+                            <Button size="icon" variant="outline" className="border! hover:border-primary!">
+                              <Eye className="size-4" />
+                            </Button>
+                          </DialogTrigger>
+
+                          {/* COMPONENT: Detalhes do agendamento */}
+                          <DetailsAppointment appointment={occupant} />
+                        </Dialog>
 
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                           <DialogTrigger asChild>
