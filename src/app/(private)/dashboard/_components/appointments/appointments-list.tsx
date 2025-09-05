@@ -2,14 +2,17 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { Calendar, Clock, Loader2 } from 'lucide-react'
+import { Calendar, Clock, Eye, Loader2, X } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { Prisma } from '@/generated/prisma'
 import { formatDuration } from '@/utils/format-duration'
+import { DeleteAppointment } from './delete-appointment'
 
 type AppointmentsListProps = {
   times: string[]
@@ -20,6 +23,8 @@ type AppointmentWithService = Prisma.AppointmentGetPayload<{
 }>
 
 export function AppointmentsList({ times }: AppointmentsListProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
   const searchParams = useSearchParams()
   const date = searchParams.get('date') as string
 
@@ -44,6 +49,8 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
 
       return data
     },
+    staleTime: 2000, // 2 segundos de cache para agendamentos
+    refetchInterval: 60000, // 1 minuto de intervalo para agendamentos
   })
 
   // occupantMap vai guardar quais horários já estão ocupados e qual agendamento ocupa cada um.
@@ -105,13 +112,12 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                       <Clock className="size-4" />
                       <span className="w-16 font-semibold text-sm">{slot}</span>
                     </div>
-                    <Badge variant="outline" className="border! border-amber-600! text-[10px] lg:text-xs">
+                    <Badge variant="outline" className="border! border-amber-600! text-[10px] text-xs">
                       Agendado
                     </Badge>
                     <div className="ml-4 flex flex-col gap-1 text-sm">
                       <div className="flex items-center gap-1">
                         <span className="font-semibold text-sm">{occupant.name}</span>
-                        <span className="ml-2 text-muted-foreground text-xs">{occupant.phone}</span>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -121,12 +127,36 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                         </span>
                       </div>
 
-                      <span className="text-muted-foreground text-xs">
-                        {(occupant.service.price / 100).toLocaleString('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL',
-                        })}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground text-xs">
+                          Valor: {''}
+                          {(occupant.service.price / 100).toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })}
+                        </span>
+
+                        <span className="text-muted-foreground text-xs">{occupant.phone}</span>
+                      </div>
+                    </div>
+
+                    <div className="ml-auto">
+                      <div className="flex flex-col items-center gap-2 xl:flex-row">
+                        <Button size="icon" variant="outline" className="border! hover:border-primary!">
+                          <Eye className="size-4" />
+                        </Button>
+
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                          <DialogTrigger asChild>
+                            <Button size="icon" variant="outline" className="border! hover:border-destructive!">
+                              <X className="size-4" />
+                            </Button>
+                          </DialogTrigger>
+
+                          {/* COMPONENT: Deletar agendamento */}
+                          <DeleteAppointment appointmentId={occupant.id} setIsDialogOpen={setIsDialogOpen} />
+                        </Dialog>
+                      </div>
                     </div>
                   </div>
                 )
@@ -138,7 +168,7 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                     <Clock className="size-4" />
                     <span className="w-16 font-semibold text-sm">{slot}</span>
                   </div>
-                  <Badge variant="outline" className="border! border-primary! text-[10px] lg:text-xs">
+                  <Badge variant="outline" className="border! border-primary! text-xs">
                     Disponível
                   </Badge>
                 </div>

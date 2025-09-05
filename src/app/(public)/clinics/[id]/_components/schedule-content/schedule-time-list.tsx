@@ -48,7 +48,7 @@ export function ScheduleTimeList({
             variant={selectedTime === timeSlot.time ? 'default' : 'outline'}
             onClick={() => slotEnabled && onSelectTime(timeSlot.time)}
             disabled={!slotEnabled}
-            className={cn('select-none', selectedTime === timeSlot.time && 'text-white')}
+            className={cn('select-none hover:border-primary!', selectedTime === timeSlot.time && 'text-white')}
           >
             {timeSlot.time}
           </Button>
