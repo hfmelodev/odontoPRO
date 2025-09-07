@@ -25,13 +25,13 @@ export function Hero() {
             </Button>
           </article>
 
-          <div className="hidden lg:block">
+          <div className="relative hidden h-[400px] w-[340px] lg:block">
             <Image
               src="/doctor-hero.png"
               alt="Foto ilustrativa de um profissional da saúde"
               className="object-contain"
-              width={340}
-              height={400}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               quality={100}
               priority
             />

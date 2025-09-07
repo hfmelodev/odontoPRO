@@ -1,15 +1,9 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
 import { Toaster } from 'sonner'
 import SessionAuthProvider from '@/components/app/session-auth'
-import { cn } from '@/lib/utils'
 import { QueryClientContext } from '@/providers/query-client'
 
 import '../styles/globals.css'
-
-const geist = Geist({
-  subsets: ['latin'],
-})
 
 export const metadata: Metadata = {
   title: 'OdontoPRO',
@@ -24,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={cn(geist.className, 'dark antialiased')}>
+    <html lang="pt-BR" className="dark font-geist antialiased">
+      <body>
         <SessionAuthProvider>
           <QueryClientContext>
             <Toaster richColors theme="dark" position="top-right" />
