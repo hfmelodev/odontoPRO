@@ -26,13 +26,13 @@ export async function createNewAppointment(formData: AppointmentFormType) {
   }
 
   try {
-    const selectDate = new Date(schema.data.date)
+    const selectedDate = new Date(schema.data.date)
 
-    const year = selectDate.getFullYear()
-    const month = selectDate.getMonth()
-    const day = selectDate.getDate()
+    const year = selectedDate.getFullYear()
+    const month = selectedDate.getMonth()
+    const day = selectedDate.getDate()
 
-    const appointmentDate = new Date(year, month, day, 0, 0, 0, 0)
+    const appointmentDate = new Date(Date.UTC(year, month, day, 0, 0, 0, 0)) // Zera o UTC da data selecionada
 
     await prisma.appointment.create({
       data: {

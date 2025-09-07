@@ -1,7 +1,5 @@
 'use client'
 
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import { Calendar, Clock, Mail, Phone, User } from 'lucide-react'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
@@ -46,9 +44,12 @@ export function DetailsAppointment({ appointment }: DetailsAppointmentProps) {
           <div className="flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span>
-              {format(new Date(appointment.appointmentDate), "dd 'de' MMMM 'de' yyyy", {
-                locale: ptBR,
-              })}
+              {new Intl.DateTimeFormat('pt-BR', {
+                timeZone: 'UTC',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              }).format(new Date(appointment.appointmentDate))}
             </span>
           </div>
           <div className="flex items-center gap-2 text-sm">

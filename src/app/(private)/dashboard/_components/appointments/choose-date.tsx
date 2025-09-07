@@ -32,7 +32,7 @@ export function ChoosePickerDate() {
       <PopoverTrigger asChild>
         <Button variant="outline" className={cn('w-fit justify-start text-left font-normal text-sm hover:border-primary')}>
           <CalendarIcon />
-          {selectedDate || <span>Escolher data</span>}
+          {format(parseISO(selectedDate), 'dd/MM/yyyy', { locale: ptBR }) || <span>Escolher data</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
