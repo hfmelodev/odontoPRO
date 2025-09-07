@@ -17,10 +17,12 @@ export function Header() {
           Odonto<span className="font-extrabold text-primary">PRO</span>
         </Link>
 
-        <nav className="hidden items-center space-x-4 md:flex">
-          <NavItems setIsSheetOpen={setIsSheetOpen} />
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center space-x-2 md:flex">
+          <NavItems setIsSheetOpen={setIsSheetOpen} variant="ghost" />
         </nav>
 
+        {/* Mobile Navigation */}
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="outline" size="icon">
@@ -34,7 +36,7 @@ export function Header() {
             </SheetHeader>
 
             <nav className="flex flex-col space-y-3">
-              <NavItems setIsSheetOpen={setIsSheetOpen} />
+              <NavItems setIsSheetOpen={setIsSheetOpen} variant="outline" />
             </nav>
           </SheetContent>
         </Sheet>

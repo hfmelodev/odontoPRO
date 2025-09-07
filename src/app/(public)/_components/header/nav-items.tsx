@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutDashboard, Link as LinkIcon, LoaderCircle, LogIn } from 'lucide-react'
+import { LayoutDashboard, LoaderCircle, LogIn } from 'lucide-react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
@@ -9,9 +9,10 @@ import { handleRegister } from '../../_actions/authenticate'
 
 type NavItemsProps = {
   setIsSheetOpen: (open: boolean) => void
+  variant?: 'outline' | 'ghost'
 }
 
-export function NavItems({ setIsSheetOpen }: NavItemsProps) {
+export function NavItems({ setIsSheetOpen, variant }: NavItemsProps) {
   const { data: session, status } = useSession()
 
   const navItems = [
@@ -32,12 +33,9 @@ export function NavItems({ setIsSheetOpen }: NavItemsProps) {
   return (
     <>
       {navItems.map(item => (
-        <div key={item.href} className="ml-2.5 flex flex-col items-start">
-          <Button asChild variant="ghost" onClick={() => setIsSheetOpen(false)}>
-            <Link href={item.href}>
-              <LinkIcon />
-              {item.label}
-            </Link>
+        <div key={item.href} className="mx-4 flex flex-col items-start">
+          <Button asChild variant={variant} className="w-full" onClick={() => setIsSheetOpen(false)}>
+            <Link href={item.href}>{item.label}</Link>
           </Button>
         </div>
       ))}

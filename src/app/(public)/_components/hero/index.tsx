@@ -9,7 +9,11 @@ export function Hero() {
         <main className="mt-2 flex items-center justify-center">
           <article className="flex max-w-3xl flex-[2] flex-col justify-center space-y-4 md:space-y-8">
             <h1 className="max-w-2xl font-bold text-4xl tracking-tight lg:text-5xl">
-              Encontre os melhores profissionais em um único local!
+              Encontre os{' '}
+              <span className="bg-gradient-to-r from-emerald-500 to-emerald-300 bg-clip-text text-transparent">
+                melhores profissionais
+              </span>{' '}
+              em um único local!
             </h1>
             <p className="text-base text-muted-foreground md:text-lg">
               Nós somos uma plataforma para profissionais de saúde com foco em agilizar seu atendimento de forma simplificada e

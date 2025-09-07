@@ -1,7 +1,7 @@
 export default function Plans() {
   return (
     <main>
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="mt-40 flex items-center justify-center">
         <h1>Plans</h1>
       </div>
     </main>
