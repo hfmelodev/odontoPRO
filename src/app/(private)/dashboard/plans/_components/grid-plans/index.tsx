@@ -1,9 +1,9 @@
-import { BadgeCheck, CheckCircle, Crown, Gem } from 'lucide-react'
+import { CheckCircle, Gem } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { subscriptionPlans } from '../../_utils/plans'
+import { SubscriptionButton } from '../subscription-button'
 
 export function GridPlans() {
   return (
@@ -50,10 +50,7 @@ export function GridPlans() {
           </CardContent>
 
           <CardFooter className="mt-auto mb-4 w-full px-4">
-            <Button className="w-full font-semibold text-white" variant={index === 0 ? 'outline' : 'default'}>
-              {index === 0 ? <BadgeCheck /> : <Crown />}
-              Assinar agora
-            </Button>
+            <SubscriptionButton planIndex={index} type={plan.id === 'BASIC' ? 'BASIC' : 'PROFESSIONAL'} />
           </CardFooter>
         </Card>
       ))}
