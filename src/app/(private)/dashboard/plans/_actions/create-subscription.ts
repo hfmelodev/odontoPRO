@@ -58,6 +58,7 @@ export async function createSubscription({ type }: CreateSubscriptionProps) {
         {
           price:
             type === 'BASIC' ? (process.env.STRIPE_PLAN_BASIC_ID as string) : (process.env.STRIPE_PLAN_PROFESSIONAL_ID as string),
+          // Somente permitir a compra de uma unidade do plano
           quantity: 1,
         },
       ],
