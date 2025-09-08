@@ -4,6 +4,7 @@ import { BadgeCheck, Crown } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import type { TypePlans } from '@/generated/prisma'
+import { getStringJs } from '@/lib/stripe-js'
 import { createSubscription } from '../_actions/create-subscription'
 
 type SubscriptionButtonProps = {
@@ -17,9 +18,16 @@ export function SubscriptionButton({ planIndex: index, type }: SubscriptionButto
 
     if (response.error) {
       toast.error(response.error)
+      return
     }
 
-    toast.success(response.message)
+    const stripe = await getStringJs()
+
+    if (stripe) {
+      await stripe.redirectToCheckout({ sessionId: response.sessionId! })
+    }
+
+    toast.info(response.message)
   }
 
   return (
