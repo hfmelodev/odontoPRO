@@ -17,6 +17,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
+			"complexity": "off",
 			"recommended": true,
 			"suspicious": {
 				"noShadowRestrictedNames": "off",
