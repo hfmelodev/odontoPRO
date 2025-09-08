@@ -1,15 +1,24 @@
-import { Star, User2 } from 'lucide-react'
+import { BadgeCheck, CheckCircle, Crown, Gem } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 import { subscriptionPlans } from '../../_utils/plans'
 
 export function GridPlans() {
   return (
-    <div>
+    <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {subscriptionPlans.map((plan, index) => (
-        <Card key={plan.id} className="relative mb-4 py-0">
+        <Card
+          key={plan.id}
+          className={cn(
+            'relative py-0',
+            index === 1 &&
+              'hover:-translate-y-1 border border-primary transition-all duration-300 hover:shadow-lg hover:shadow-primary/50'
+          )}
+        >
           {index === 0 && (
-            <CardHeader className="rounded-md p-4">
+            <CardHeader className="rounded-t-md bg-muted p-4">
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
               <CardDescription>{plan.description}</CardDescription>
             </CardHeader>
@@ -22,8 +31,8 @@ export function GridPlans() {
             </CardHeader>
           )}
 
-          {plan['name'] === 'Basic' && <User2 className="absolute top-5 right-6" />}
-          {plan['name'] === 'Professional' && <Star className="absolute top-5 right-6" />}
+          {plan['name'] === 'Basic' && <CheckCircle className="absolute top-5 right-6" />}
+          {plan['name'] === 'Professional' && <Gem className="absolute top-5 right-6" />}
 
           <CardContent>
             <ul className="relative flex flex-col">
@@ -33,9 +42,21 @@ export function GridPlans() {
                 </Badge>
               ))}
             </ul>
+
+            <div className="mt-2">
+              <span className="text-muted-foreground text-sm line-through">{plan.oldPrice}</span>
+              <p className="font-bold text-2xl">{plan.price}</p>
+            </div>
           </CardContent>
+
+          <CardFooter className="mt-auto mb-4 w-full px-4">
+            <Button className="w-full font-semibold text-white" variant={index === 0 ? 'outline' : 'default'}>
+              {index === 0 ? <BadgeCheck /> : <Crown />}
+              Assinar agora
+            </Button>
+          </CardFooter>
         </Card>
       ))}
-    </div>
+    </section>
   )
 }

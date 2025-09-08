@@ -34,7 +34,7 @@ export const subscriptionPlans = [
     features: [
       `Até ${PLANS.PROFESSIONAL.maxServices} serviços ativos`,
       'Agendamentos ilimitados',
-      'Acesso a todas as atualizações e novos recursos',
+      'Acesso a todas as atualizações',
       'Análises avançadas e relatórios',
     ],
   },
