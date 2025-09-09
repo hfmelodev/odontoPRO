@@ -1,11 +1,14 @@
 'use client'
 
 import { Settings } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import type { Subscription } from '@/generated/prisma'
+import { createPortalCustomer } from '../../_actions/create-portal-customer'
 import { subscriptionPlans } from '../../_utils/plans'
 
 type SubscriptionDetailProps = {
@@ -13,12 +16,21 @@ type SubscriptionDetailProps = {
 }
 
 export function SubscriptionDetail({ subscription }: SubscriptionDetailProps) {
+  const router = useRouter()
+
   const subscriptionInfo = subscriptionPlans.find(plan => plan.id === subscription.plan)
 
   if (!subscriptionInfo) return null
 
   async function handleManagerSubscription() {
-    console.log('Gerenciar assinatura')
+    const portal = await createPortalCustomer()
+
+    if (portal.error || !portal.url) {
+      toast.error(portal.error)
+      return
+    }
+
+    router.push(portal.url)
   }
 
   return (
