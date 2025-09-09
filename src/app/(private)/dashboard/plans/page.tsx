@@ -1,5 +1,5 @@
+import { getSubscription } from '@/app/(private)/dashboard/plans/_utils/get-subscription'
 import getSession from '@/lib/session'
-import { getSubscription } from '@/utils/get-subscription'
 import { GridPlans } from './_components/grid-plans'
 import { SubscriptionDetail } from './_components/subscription-detail'
 

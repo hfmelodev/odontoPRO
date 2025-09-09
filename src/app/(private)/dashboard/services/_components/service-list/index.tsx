@@ -1,25 +1,30 @@
 'use client'
 
-import { Edit, PlusIcon, X } from 'lucide-react'
+import { Ban, Edit, PlusIcon, X } from 'lucide-react'
 import { Fragment, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { Service } from '@/generated/prisma'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/utils/format-currency'
+import type { ResultPermissionProps } from '../../../plans/_utils/permission/can-permission'
 import { DialogService } from '../dialog-service'
 import { DeleteService } from './delete-service'
 
 type ServiceListProps = {
   services: Service[]
+  permission: ResultPermissionProps
 }
 
-export function ServiceList({ services }: ServiceListProps) {
+export function ServiceList({ services, permission }: ServiceListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingService, setEditingService] = useState<Service | null>(null)
+
+  const serviceList = permission.hasPermission ? services : services.slice(0, 3)
 
   async function handleUpdateService(service: Service) {
     setEditingService(service)
@@ -32,15 +37,24 @@ export function ServiceList({ services }: ServiceListProps) {
         <Card className="gap-4">
           <CardHeader className="mb-4 flex flex-row items-center justify-between space-y-0">
             <CardTitle className="font-bold text-xl md:text-2xl">Serviços</CardTitle>
-            <DialogTrigger asChild>
-              <Button
-                onClick={() => setEditingService(null)}
-                variant="outline"
-                className="hover:border! transition-all duration-200 ease-in-out hover:border-primary!"
-              >
-                <PlusIcon />
-              </Button>
-            </DialogTrigger>
+            {permission.hasPermission ? (
+              <DialogTrigger asChild>
+                <Button
+                  onClick={() => setEditingService(null)}
+                  variant="outline"
+                  className="hover:border! transition-all duration-200 ease-in-out hover:border-primary!"
+                >
+                  <PlusIcon />
+                </Button>
+              </DialogTrigger>
+            ) : (
+              <div className="flex items-center gap-2">
+                <p className="animate-pulse text-destructive text-sm">Limites de serviços atingidos</p>
+                <Button variant="destructive" className="cursor-not-allowed">
+                  <Ban />
+                </Button>
+              </div>
+            )}
 
             {/* Conteudo que será exibido quando o dialog estiver aberto */}
             <DialogService
@@ -72,7 +86,7 @@ export function ServiceList({ services }: ServiceListProps) {
 
           <CardContent>
             <section className="space-y-4">
-              {services.map(service => (
+              {serviceList.map(service => (
                 <Fragment key={service.id}>
                   <article className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

@@ -1,3 +1,4 @@
+import { canPermission } from '../../../plans/_utils/permission/can-permission'
 import { getAllUserServices } from '../../_dal/get-all-user-services'
 import { ServiceList } from '../service-list'
 
@@ -8,5 +9,7 @@ type ServiceContentProps = {
 export async function ServiceContent({ userId }: ServiceContentProps) {
   const { services } = await getAllUserServices({ userId })
 
-  return <ServiceList services={services || []} />
+  const permissions = await canPermission({ type: 'service' })
+
+  return <ServiceList services={services || []} permission={permissions} />
 }

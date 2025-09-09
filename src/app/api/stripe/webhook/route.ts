@@ -1,9 +1,9 @@
 import { revalidatePath } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 import type Stripe from 'stripe'
+import { manageSubscription } from '@/app/(private)/dashboard/plans/_utils/manager-subscription'
 import type { TypePlans } from '@/generated/prisma'
 import { stripe } from '@/lib/stripe'
-import { manageSubscription } from '@/utils/manager-subscription'
 
 export async function POST(request: NextRequest) {
   // Busca a assinatura do cabeçalho da requisição Stripe
