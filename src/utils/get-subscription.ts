@@ -3,26 +3,16 @@
 import { prisma } from '@/lib/prisma'
 
 export async function getSubscription({ userId }: { userId: string }) {
-  if (!userId) {
-    return {
-      status: 400,
-      message: 'Usuário não autenticado',
-    }
-  }
+  if (!userId) return null
 
   try {
     const subscription = await prisma.subscription.findUnique({
-      where: {
-        userId,
-      },
+      where: { userId },
     })
 
     return subscription
   } catch (err) {
-    console.log(err)
-    return {
-      status: 500,
-      message: 'Erro ao buscar assinatura',
-    }
+    console.error(err)
+    return null
   }
 }
