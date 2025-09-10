@@ -1,3 +1,5 @@
+import { LabelSubscription } from '@/components/app/label-subscription'
+import { LabelTrial } from '@/components/app/label-trial'
 import { canPermission } from '../../../plans/_utils/permission/can-permission'
 import { getAllUserServices } from '../../_dal/get-all-user-services'
 import { ServiceList } from '../service-list'
@@ -11,5 +13,11 @@ export async function ServiceContent({ userId }: ServiceContentProps) {
 
   const permissions = await canPermission({ type: 'service' })
 
-  return <ServiceList services={services || []} permission={permissions} />
+  return (
+    <>
+      {!permissions.hasPermission && <LabelSubscription expired={permissions.expired} />}
+      {permissions.planId === 'TRIAL' && <LabelTrial />}
+      <ServiceList services={services || []} permission={permissions} />
+    </>
+  )
 }

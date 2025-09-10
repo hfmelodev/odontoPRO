@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className="dark font-geist antialiased">
-      <body>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className="dark font-geist antialiased">
         <SessionAuthProvider>
           <QueryClientContext>
             <Toaster richColors theme="dark" position="top-right" />

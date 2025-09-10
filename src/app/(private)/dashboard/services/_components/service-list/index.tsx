@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { Service } from '@/generated/prisma'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/utils/format-currency'
@@ -49,9 +48,9 @@ export function ServiceList({ services, permission }: ServiceListProps) {
               </DialogTrigger>
             ) : (
               <div className="flex items-center gap-2">
-                <p className="animate-pulse text-destructive text-sm">Limites de serviços atingidos</p>
-                <Button variant="destructive" className="cursor-not-allowed">
-                  <Ban />
+                <p className="animate-pulse font-medium text-destructive text-sm">Limites de serviços atingidos</p>
+                <Button variant="outline" className="cursor-not-allowed">
+                  <PlusIcon />
                 </Button>
               </div>
             )}

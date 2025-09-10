@@ -36,15 +36,6 @@ export async function canPermission({ type }: CanPermissionProps): Promise<Resul
     },
   })
 
-  if (!subscription) {
-    return {
-      hasPermission: false,
-      planId: 'EXPIRED',
-      expired: true,
-      plan: null,
-    }
-  }
-
   switch (type) {
     case 'service': {
       const permission = await canCreateService({ subscription, session })
