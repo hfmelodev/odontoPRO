@@ -8,7 +8,7 @@ export default async function Services() {
 
   return (
     <Suspense fallback={<LoadingServices />}>
-      <ServiceContent userId={session!.user.id} />
+      <ServiceContent userId={session!.user.id} userCreationDate={session!.user.createdAt} />
     </Suspense>
   )
 }
