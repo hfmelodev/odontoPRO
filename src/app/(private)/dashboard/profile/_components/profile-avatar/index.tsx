@@ -13,6 +13,10 @@ type ProfileAvatarProps = {
   user: User
 }
 
+type DataResulProps = {
+  url: string
+}
+
 export function ProfileAvatar({ user }: ProfileAvatarProps) {
   const avatarUrl = user.image
 
@@ -41,12 +45,18 @@ export function ProfileAvatar({ user }: ProfileAvatarProps) {
     setIsLoadingUpload(true)
 
     const imageUrl = await handleUploadImage(newFile)
+
+    if (imageUrl) {
+      setPreviewImage(imageUrl)
+      setIsLoadingUpload(false)
+
+      toast.success('Imagem alterada com sucesso')
+    }
   }
 
   async function handleUploadImage(image: File): Promise<string | null> {
     try {
       toast.warning('Estamos enviando a imagem, aguarde...')
-      await new Promise(resolve => setTimeout(resolve, 2000))
 
       const formData = new FormData()
 
@@ -63,9 +73,9 @@ export function ProfileAvatar({ user }: ProfileAvatarProps) {
         return null
       }
 
-      toast.success('Imagem alterada com sucesso')
+      const data: DataResulProps = await response.json()
 
-      return response.json()
+      return data.url
     } catch (err) {
       console.log(err)
       toast.error('Ocorreu um erro ao enviar a imagem')
