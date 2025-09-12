@@ -2,12 +2,14 @@
 
 import { ImageUp, Loader2 } from 'lucide-react'
 import Image from 'next/image'
+import { useSession } from 'next-auth/react'
 import { type ChangeEvent, useState } from 'react'
 import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { User } from '@/generated/prisma'
 import { cn } from '@/lib/utils'
+import { updateAvatar } from '../../_actions/update-avatar'
 
 type ProfileAvatarProps = {
   user: User
@@ -18,6 +20,8 @@ type DataResulProps = {
 }
 
 export function ProfileAvatar({ user }: ProfileAvatarProps) {
+  const { update } = useSession()
+
   const avatarUrl = user.image
 
   const [previewImage, setPreviewImage] = useState(avatarUrl)
@@ -46,12 +50,27 @@ export function ProfileAvatar({ user }: ProfileAvatarProps) {
 
     const imageUrl = await handleUploadImage(newFile)
 
-    if (imageUrl) {
-      setPreviewImage(imageUrl)
+    if (!imageUrl || imageUrl === null) {
       setIsLoadingUpload(false)
-
-      toast.success('Imagem alterada com sucesso')
+      toast.error('Ocorreu um erro ao enviar a imagem')
+      return
     }
+
+    setPreviewImage(imageUrl)
+
+    // Chamada da Server Action e atualiza a imagem do usuário no banco
+    await updateAvatar({
+      avatarUrl: imageUrl,
+    })
+
+    //
+    await update({
+      image: imageUrl,
+    })
+
+    setIsLoadingUpload(false)
+
+    toast.success('Imagem alterada com sucesso')
   }
 
   async function handleUploadImage(image: File): Promise<string | null> {
