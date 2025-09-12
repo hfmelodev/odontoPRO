@@ -1,7 +1,6 @@
 'use client'
 
 import { Clock, Save } from 'lucide-react'
-import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -18,6 +17,7 @@ import { formatPhone } from '@/utils/format-phone'
 import { updateProfile } from '../../_actions/update-profile'
 import { generateTimeSlots } from '../../_utils/generate-time-slots'
 import { getBrazilTimezones } from '../../_utils/get-brazil-timezones'
+import { ProfileAvatar } from '../profile-avatar'
 import { type ProfileFormType, useProfileForm } from '../profile-form'
 
 type UserWithSubscription = Prisma.UserGetPayload<{ include: { subscription: true } }>
@@ -85,16 +85,8 @@ export function ProfileContent({ user }: ProfileContentProps) {
 
             <CardContent className="space-y-6">
               <div className="flex justify-center">
-                <div className="relative h-40 w-40 overflow-hidden rounded-full border-2 border-primary">
-                  <Image
-                    src={user.image ? user.image : '/user.svg'}
-                    alt="Foto de perfil da clínica"
-                    priority
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover"
-                  />
-                </div>
+                {/* COMPONENT: ProfileAvatar */}
+                <ProfileAvatar user={user} />
               </div>
 
               <div className="space-y-4">
