@@ -8,6 +8,9 @@ export async function getProfessionals() {
       where: {
         status: true,
       },
+      include: {
+        subscription: true,
+      },
       orderBy: {
         name: 'asc', // Ordena por nome em ordem alfabética
       },

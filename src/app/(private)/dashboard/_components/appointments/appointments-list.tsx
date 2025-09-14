@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 import type { Prisma } from '@/generated/prisma'
 import { formatDuration } from '@/utils/format-duration'
 import { ChoosePickerDate } from './choose-date'
@@ -94,6 +95,12 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
         <ChoosePickerDate />
       </CardHeader>
 
+      {times.length === 0 && (
+        <div className="mx-2">
+          <Separator />
+        </div>
+      )}
+
       <CardContent>
         <ScrollArea className="h-[calc(100vh-20rem)] pr-4 lg:h-[calc(100vh-15rem)]">
           {isPendingAppointments ? (
@@ -125,21 +132,6 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground text-xs">{occupant.service.name}</span>
-                        <span className="text-muted-foreground text-xs">
-                          Duração: {formatDuration(occupant.service.duration)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground text-xs">
-                          Valor: {''}
-                          {(occupant.service.price / 100).toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL',
-                          })}
-                        </span>
-
                         <span className="text-muted-foreground text-xs">{occupant.phone}</span>
                       </div>
                     </div>
@@ -185,6 +177,12 @@ export function AppointmentsList({ times }: AppointmentsListProps) {
                 </div>
               )
             })
+          )}
+
+          {times.length === 0 && (
+            <div className="flex h-full items-center justify-center">
+              <span className="text-muted-foreground text-sm">Você não possui agendamentos neste dia</span>
+            </div>
           )}
         </ScrollArea>
       </CardContent>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Ban, Edit, PlusIcon, X } from 'lucide-react'
+import { Edit, PlusIcon, X } from 'lucide-react'
 import { Fragment, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

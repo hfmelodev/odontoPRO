@@ -147,7 +147,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
 
         <div className="mt-auto hidden w-full space-y-4 md:block">
           {/* Perfil */}
-          <div className="flex items-center gap-3 rounded-md bg-muted/40 px-3 py-2">
+          <div className="flex items-center gap-3 rounded-md bg-muted/40 px-3 py-2 shadow-sm">
             {status === 'authenticated' ? (
               <Image
                 src={session?.user?.image ?? ''}
@@ -169,9 +169,9 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
             )}
 
             {!isSibedarCollapsed && (
-              <div className="flex flex-col">
-                <p className="font-medium text-foreground text-sm">{session?.user?.name}</p>
-                <p className="text-muted-foreground text-xs">{session?.user?.email}</p>
+              <div className="flex min-w-0 flex-col">
+                <p className="truncate font-medium text-foreground text-sm">{session?.user?.name}</p>
+                <p className="truncate text-muted-foreground text-xs">{session?.user?.email}</p>
               </div>
             )}
           </div>

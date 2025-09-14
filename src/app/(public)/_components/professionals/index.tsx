@@ -5,10 +5,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import type { User } from '@/generated/prisma'
+import type { Prisma } from '@/generated/prisma'
+import { PremiumBadge } from '../premium-bagde'
+
+type UserWithSubscription = Prisma.UserGetPayload<{
+  include: { subscription: true }
+}>
 
 type ProfessionalsProps = {
-  professionals: User[]
+  professionals: UserWithSubscription[]
 }
 
 export function Professionals({ professionals }: ProfessionalsProps) {
@@ -33,13 +38,19 @@ export function Professionals({ professionals }: ProfessionalsProps) {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     priority
                   />
+
+                  {professional.subscription?.status === 'active' && professional.subscription?.plan === 'PROFESSIONAL' && (
+                    <PremiumBadge />
+                  )}
                 </div>
 
-                <div className="relative space-y-4 p-4">
+                <div className="relative flex min-h-[160px] flex-col justify-between space-y-4 p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-semibold">{professional.name}</h3>
-                      <p className="text-muted-foreground text-sm">{professional.address ?? 'Endereço não informado'}</p>
+                      <p className="line-clamp-2 text-muted-foreground text-sm">
+                        {professional.address ?? 'Endereço não informado'}
+                      </p>
                     </div>
 
                     <div className="absolute top-4 right-4 flex size-2.5 animate-pulse items-center gap-2 rounded-full bg-primary" />
