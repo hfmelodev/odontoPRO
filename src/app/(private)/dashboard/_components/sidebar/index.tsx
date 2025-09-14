@@ -152,12 +152,20 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               <Image
                 src={session?.user?.image ?? ''}
                 alt={session?.user?.name ?? ''}
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full"
+                width={20}
+                height={20}
+                className={cn('rounded-full', {
+                  'size-10': !isSibedarCollapsed,
+                  'size-6': isSibedarCollapsed,
+                })}
               />
             ) : (
-              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton
+                className={cn('rounded-full', {
+                  'size-10': !isSibedarCollapsed,
+                  'size-6': isSibedarCollapsed,
+                })}
+              />
             )}
 
             {!isSibedarCollapsed && (

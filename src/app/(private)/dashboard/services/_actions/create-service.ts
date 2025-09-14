@@ -35,6 +35,7 @@ export async function createService(formData: FormSchemaType) {
   const serviceExists = await prisma.service.findFirst({
     where: {
       name: schema.data.name,
+      userId: session.user.id,
     },
   })
 

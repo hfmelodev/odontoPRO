@@ -28,7 +28,7 @@ export async function canCreateService({ subscription, session }: CanCreateServi
 
       return {
         // verifica se o plano atual permite criar mais serviços ou se o plano atual tem limite de serviços
-        hasPermission: planLimits.maxServices === null || serviceCount <= planLimits.maxServices,
+        hasPermission: planLimits.maxServices === null || serviceCount < planLimits.maxServices,
         planId: subscription.plan,
         expired: false,
         plan: PLANS[subscription.plan],

@@ -27,7 +27,7 @@ export function NavItems({ setIsSheetOpen, variant }: NavItemsProps) {
   ]
 
   async function handleAuthentication() {
-    await handleRegister('github')
+    await handleRegister('google')
   }
 
   return (
