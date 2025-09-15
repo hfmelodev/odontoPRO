@@ -9,9 +9,10 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "prisma generate && pnpm prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "stripe": "stripe listen --forward-to localhost:3000/api/stripe/webhook"
   },
   "dependencies": {
