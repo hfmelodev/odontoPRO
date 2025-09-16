@@ -1,6 +1,7 @@
 'use client'
 
-import { CalendarClock } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Building2, CalendarClock } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -21,6 +22,19 @@ export function Professionals({ professionals }: ProfessionalsProps) {
     <section className="bg-muted/40 py-16">
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center font-bold text-3xl">Clínicas disponíveis</h2>
+
+        {professionals.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="flex flex-col items-center justify-center rounded-2xl border border-muted-foreground/30 border-dashed p-8 shadow-sm"
+          >
+            <Building2 className="mb-3 h-10 w-10 text-muted-foreground" />
+            <p className="font-medium text-base text-muted-foreground">Nenhuma clínica cadastrada</p>
+            <p className="text-muted-foreground/70 text-sm">Adicione sua primeira clínica para começar.</p>
+          </motion.div>
+        )}
 
         <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {professionals.map(professional => (

@@ -7,8 +7,21 @@ import '../styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'OdontoPRO',
-  icons: {
-    icon: '/stethoscope.svg',
+  description:
+    'Nós somos uma plataforma para profissionais de saúde com foco em agilizar seu atendimento de forma simplificada e organizada.',
+  icons: '/stethoscope.svg',
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 }
 

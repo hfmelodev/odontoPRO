@@ -18,6 +18,7 @@ export async function canCreateService({ subscription, session }: CanCreateServi
     const serviceCount = await prisma.service.count({
       where: {
         userId: session.user.id,
+        status: true,
       },
     })
 
